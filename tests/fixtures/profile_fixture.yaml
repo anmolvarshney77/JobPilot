@@ -1,0 +1,45 @@
+name: Test User
+email: test@example.com
+phone: { country_code: "+1", number: "5550000000" }
+current_location: { city: TestCity, country: IN, timezone: Asia/Kolkata }
+linkedin: https://linkedin.com/in/testuser
+github: https://github.com/testuser
+portfolio: https://testuser.github.io
+years_experience: 2
+education:
+  - degree: "Bachelor of Science"
+    field: "Computer Science"
+    institution: "Test University"
+    graduation_year: 2024
+languages:
+  English: C1
+target_titles: ["Software Engineer"]
+seniority_years_range: { min: 1, max: 5 }
+core_skills: ["Python", "FastAPI"]
+target_countries: ["DE"]
+remote_ok: true
+needs_visa_sponsorship: true
+open_to_relocation: true
+earliest_start: "2027-01-01"
+notice_period_days: 30
+expected_salary:
+  DE: { currency: EUR, min: 60000 }
+  default: { currency: EUR, min: 50000 }
+exclude_companies: []
+company_cooldown_days: 60
+fixed_answers:
+  authorized_to_work_US: "No"
+  authorized_to_work_EU: "No"
+  authorized_to_work_UK: "No"
+  require_sponsorship_now_or_future: "Yes"
+  willing_to_relocate: "Yes"
+  previously_employed_here: "No"
+  criminal_conviction: "No"
+  age_18_or_over: "Yes"
+  gender: "Male"
+  race_ethnicity: "Asian"
+  veteran_status: "I am not a protected veteran"
+  disability_status: "No, I do not have a disability"
+  pronouns: "he/him"
+  how_did_you_hear: "Company careers page"
+resume_master_path: ./master_resume.md

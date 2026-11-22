@@ -1,0 +1,12 @@
+llm:
+  scoring_model: "claude-haiku-5-5"
+  tailoring_model: "claude-sonnet-5-5"
+  monthly_budget_usd: 15.0
+  max_description_chars: 12000
+scoring:
+  min_match_score: 0.6
+  sponsorship_required: true
+  boost_remote: 0.1
+rate_limits:
+  fetch_delay_seconds: 2.0
+  max_jobs_per_run: 50
