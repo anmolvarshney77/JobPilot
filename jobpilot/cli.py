@@ -496,30 +496,163 @@ def prepare(
 
 
 @app.command()
-def apply(dry_run: DryRun = False) -> None:
-    """Submit applications via browser automation."""
-    if dry_run:
-        typer.echo("dry run — no changes made")
-        return
-    typer.echo("apply: not yet implemented")
+def apply(
+    dry_run: DryRun = False,
+    top: int = typer.Option(5, "--top", help="Process top N prepared jobs by score"),
+) -> None:
+    """Fill application forms for prepared jobs (headed browser, human confirms submit)."""
+    import os
+    from pathlib import Path
+
+    from sqlalchemy import create_engine, select
+    from sqlalchemy.orm import sessionmaker
+
+    from jobpilot.apply import apply_job
+    from jobpilot.db import Company, Job
+
+    profile, cfg = _load_configs()
+
+    db_url = os.environ.get("DATABASE_URL", "sqlite:///./jobpilot.db")
+    engine = create_engine(db_url, connect_args={"check_same_thread": False})
+    Session = sessionmaker(bind=engine, expire_on_commit=False)
+
+    with Session() as session:
+        jobs = session.execute(
+            select(Job)
+            .where(Job.status == "prepared")
+            .order_by(Job.match_score.desc())
+            .limit(top)
+        ).scalars().all()
+
+        if not jobs:
+            typer.echo("No prepared jobs to apply to.")
+            return
+
+        if dry_run:
+            typer.echo(f"dry run — would process {len(jobs)} prepared job(s):")
+            for j in jobs:
+                score_str = f"{j.match_score:.0f}" if j.match_score else "?"
+                typer.echo(f"  [{score_str}] {j.title}")
+            return
+
+        company_ids = {j.company_id for j in jobs}
+        companies_list = session.execute(
+            select(Company).where(Company.id.in_(company_ids))
+        ).scalars().all()
+        companies_map = {c.id: c for c in companies_list}
+
+        for job in jobs:
+            company = companies_map.get(job.company_id)
+            if company is None:
+                typer.echo(f"  Company not found for job {job.id}, skipping.")
+                continue
+
+            typer.echo(f"\n{'='*60}")
+            typer.echo(f"  Job:     {job.title}")
+            typer.echo(f"  Company: {company.name}")
+            score_str = f"{job.match_score:.0f}" if job.match_score else "?"
+            typer.echo(f"  Score:   {score_str}")
+            typer.echo(f"{'='*60}")
+
+            result = apply_job(
+                job=job,
+                company=company,
+                profile=profile,
+                app_config=cfg,
+                session=session,
+                output_root=Path("output"),
+            )
+
+            if result.skipped_reason:
+                typer.echo(f"  Skipped: {result.skipped_reason}")
+            elif result.application_id:
+                typer.echo(f"  Applied! Application ID: {result.application_id}")
+            else:
+                typer.echo("  Not submitted (user chose to skip).")
+
+        session.commit()
 
 
 @app.command()
-def outreach(dry_run: DryRun = False) -> None:
-    """Draft recruiter/referral outreach messages."""
+def outreach(
+    dry_run: DryRun = False,
+    limit: int = typer.Option(5, "--limit", help="Max jobs to generate outreach for"),
+) -> None:
+    """Draft referral and recruiter messages for high-scoring jobs."""
+    import os
+    from pathlib import Path
+
+    from sqlalchemy import create_engine, select
+    from sqlalchemy.orm import sessionmaker
+
+    from jobpilot.db import Company, Job
+    from jobpilot.llm import LLMClient
+    from jobpilot.outreach import run_outreach
+    from jobpilot.tailoring.resume_parser import parse_master_resume
+
+    profile, cfg = _load_configs()
+    resume = parse_master_resume(profile.resume_master_path)
+
+    db_url = os.environ.get("DATABASE_URL", "sqlite:///./jobpilot.db")
+    engine = create_engine(db_url, connect_args={"check_same_thread": False})
+    Session = sessionmaker(bind=engine, expire_on_commit=False)
+
+    with Session() as session:
+        jobs = session.execute(
+            select(Job)
+            .where(Job.status.in_(["applied", "prepared"]), Job.match_score >= 80)
+            .order_by(Job.match_score.desc())
+            .limit(limit)
+        ).scalars().all()
+
+        if not jobs:
+            typer.echo("No eligible jobs for outreach (status=applied/prepared, score≥80).")
+            return
+
+        company_ids = {j.company_id for j in jobs}
+        companies_list = session.execute(
+            select(Company).where(Company.id.in_(company_ids))
+        ).scalars().all()
+        companies = {c.id: c for c in companies_list}
+
+        llm_client = LLMClient(cfg, Session)
+
+        results = run_outreach(
+            jobs=list(jobs),
+            companies=companies,
+            profile=profile,
+            app_config=cfg,
+            session=session,
+            llm_client=llm_client,
+            resume=resume,
+            output_root=Path("output"),
+            dry_run=dry_run,
+        )
+
+    for r in results:
+        if r.skipped_reason:
+            typer.echo(f"  [skip:{r.skipped_reason}] {r.company} — {r.title}")
+        else:
+            contacts_str = ", ".join(c.name or "search query" for c in r.contact_suggestions[:2])
+            typer.echo(f"  [drafted] {r.company} — {r.title} → contacts: {contacts_str}")
+
+    drafted = sum(1 for r in results if not r.skipped_reason)
+    skipped = sum(1 for r in results if r.skipped_reason)
+    typer.echo(f"\nDrafted: {drafted}  Skipped: {skipped}")
     if dry_run:
-        typer.echo("dry run — no changes made")
-        return
-    typer.echo("outreach: not yet implemented")
+        typer.echo("(dry run — no changes committed)")
 
 
 @app.command()
 def dashboard(dry_run: DryRun = False) -> None:
-    """Start the local web dashboard."""
+    """Start the local web dashboard on http://localhost:8000."""
     if dry_run:
-        typer.echo("dry run — no changes made")
+        typer.echo("dry run — dashboard would start on http://localhost:8000")
         return
-    typer.echo("dashboard: not yet implemented (will start uvicorn on http://localhost:8000)")
+    import uvicorn
+    from jobpilot.dashboard import dashboard_app
+    typer.echo("Starting dashboard on http://localhost:8000 ...")
+    uvicorn.run(dashboard_app, host="127.0.0.1", port=8000, reload=False)
 
 
 @app.command()

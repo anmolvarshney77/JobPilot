@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}— Follow-ups{% endblock %}
+{% block content %}
+<h1>Follow-up Reminders</h1>
+
+{% if candidates %}
+{% for item in candidates %}
+<div class="card">
+  <div style="display:flex;justify-content:space-between;">
+    <div>
+      <strong><a href="/jobs/{{ item.job_id }}">{{ item.title }}</a></strong>
+      <span style="color:#888;margin-left:8px;">{{ item.company }}</span>
+    </div>
+    <span style="font-size:12px;color:#888;">Applied {{ item.applied_days_ago }} days ago</span>
+  </div>
+  <p style="margin-top:6px;font-size:13px;color:#555;">
+    Last outreach to <strong>{{ item.contact_name }}</strong> on {{ item.sent_at }} — no reply.
+  </p>
+  {% if item.follow_up_draft %}
+  <details style="margin-top:10px;">
+    <summary style="cursor:pointer;font-size:13px;color:#2563eb;">Show follow-up draft</summary>
+    <pre style="margin-top:8px;">{{ item.follow_up_draft }}</pre>
+  </details>
+  {% endif %}
+</div>
+{% endfor %}
+{% else %}
+<p style="color:#888;">No follow-up reminders — all clear!</p>
+{% endif %}
+{% endblock %}

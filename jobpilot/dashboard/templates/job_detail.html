@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}— {{ job.title }}{% endblock %}
+{% block content %}
+
+{% if injection_warning %}
+<div class="alert-red">⚠ <strong>Prompt injection detected</strong> in job description — review before proceeding.</div>
+{% endif %}
+
+<div style="margin-bottom:16px;">
+  <a href="/" style="font-size:13px;color:#888;">← Back to jobs</a>
+</div>
+
+<div class="card">
+  <h1>{{ job.title }}</h1>
+  <p style="color:#555;margin-top:4px;">
+    {{ company_name }} &nbsp;·&nbsp; {{ job.location_raw or "Location unknown" }}
+    &nbsp;·&nbsp; <span class="badge badge-{{ job.status }}">{{ job.status }}</span>
+  </p>
+  {% if job.match_score is not none %}
+  <p style="margin-top:8px;">Score: <strong>{{ job.match_score | int }}</strong>
+    &nbsp;·&nbsp; Sponsorship: <strong>{{ job.sponsorship_signal }}</strong>
+  </p>
+  {% endif %}
+  {% if job.url %}
+  <p style="margin-top:8px;"><a href="{{ job.url }}" target="_blank">View original posting ↗</a></p>
+  {% endif %}
+</div>
+
+{% if match_summary %}
+<div class="card">
+  <h2>Match Details</h2>
+  <p style="font-size:13px;color:#555;">{{ match_summary }}</p>
+  {% if matched_skills %}
+  <p style="margin-top:8px;"><strong>Matched:</strong> {{ matched_skills | join(", ") }}</p>
+  {% endif %}
+  {% if missing_must_haves %}
+  <p style="margin-top:4px;color:#dc2626;"><strong>Missing required:</strong> {{ missing_must_haves | join(", ") }}</p>
+  {% endif %}
+</div>
+{% endif %}
+
+{% if job.description %}
+<div class="card">
+  <h2>Description</h2>
+  <p style="font-size:13px;color:#444;white-space:pre-line;">{{ job.description[:1000] }}{% if job.description|length > 1000 %}…{% endif %}</p>
+</div>
+{% endif %}
+
+<div class="card">
+  <h2>Outreach ({{ outreach_records | length }})</h2>
+  {% if outreach_records %}
+  {% for rec in outreach_records %}
+  <div id="outreach-{{ rec.id }}" style="border:1px solid #e5e7eb;border-radius:6px;padding:12px;margin-bottom:12px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <strong>{{ rec.contact_name }}</strong>
+      <span style="font-size:12px;color:#888;">{{ rec.contact_role or "" }}</span>
+    </div>
+    {% if rec.contact_url %}
+    <p style="margin-top:4px;"><a href="{{ rec.contact_url }}" target="_blank">{{ rec.contact_url }}</a></p>
+    {% endif %}
+    {% if rec.message_draft %}
+    <pre style="margin-top:8px;">{{ rec.message_draft }}</pre>
+    {% endif %}
+    <div style="margin-top:10px;display:flex;gap:10px;align-items:center;">
+      {% if not rec.sent_at %}
+      <button class="btn btn-primary btn-sm"
+              hx-post="/outreach/{{ rec.id }}/mark-sent"
+              hx-target="#outreach-{{ rec.id }}"
+              hx-swap="outerHTML">Mark as sent</button>
+      {% else %}
+      <span style="font-size:12px;color:#059669;">✓ Sent {{ rec.sent_at }}</span>
+      {% endif %}
+      <select hx-post="/outreach/{{ rec.id }}/reply"
+              hx-target="#outreach-reply-{{ rec.id }}"
+              hx-swap="outerHTML"
+              name="reply_status">
+        <option value="">Reply status…</option>
+        <option value="no_reply" {% if rec.reply_status == "no_reply" %}selected{% endif %}>No reply</option>
+        <option value="replied" {% if rec.reply_status == "replied" %}selected{% endif %}>Replied</option>
+        <option value="interested" {% if rec.reply_status == "interested" %}selected{% endif %}>Interested</option>
+        <option value="not_interested" {% if rec.reply_status == "not_interested" %}selected{% endif %}>Not interested</option>
+      </select>
+      <span id="outreach-reply-{{ rec.id }}"></span>
+    </div>
+  </div>
+  {% endfor %}
+  {% else %}
+  <p style="color:#888;">No outreach drafted yet. Run <code>jobpilot outreach</code>.</p>
+  {% endif %}
+</div>
+
+{% endblock %}

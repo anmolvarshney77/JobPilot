@@ -1,0 +1,6 @@
+{
+  "linkedin_note": "Hi, I came across your Backend Engineer role at Acme and I'm very interested. My FastAPI and PostgreSQL experience aligns well with your platform team. Happy to connect!",
+  "email_subject": "Backend Engineer Role at Acme — Application",
+  "email_body": "Hi Sarah,\n\nI noticed the Backend Engineer position at Acme and wanted to reach out. I have experience building production APIs with FastAPI and PostgreSQL, and I'm excited by your work on distributed systems. I'm based in India and would need visa sponsorship — happy to discuss. Would love to chat if you have a moment.\n\nBest,\nTest",
+  "prompt_injection_detected": false
+}

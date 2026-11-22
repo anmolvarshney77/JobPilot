@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Apply - Greenhouse</title></head>
+<body>
+<form id="application_form" action="/applications" method="post">
+  <div class="field"><label for="first_name">First Name</label><input id="first_name" name="first_name" type="text"></div>
+  <div class="field"><label for="last_name">Last Name</label><input id="last_name" name="last_name" type="text"></div>
+  <div class="field"><label for="email">Email Address</label><input id="email" name="email" type="email"></div>
+  <div class="field"><label for="phone">Phone Number</label><input id="phone" name="phone" type="tel"></div>
+  <div class="field"><label for="resume">Resume/CV *</label><input id="resume" name="resume" type="file"></div>
+  <div class="field"><label for="q_linkedin">LinkedIn Profile</label><input id="q_linkedin" name="q_linkedin" type="url"></div>
+  <div class="field">
+    <label for="q_us_auth">Are you authorized to work in the United States?</label>
+    <select id="q_us_auth" name="q_us_auth">
+      <option value="">Select...</option>
+      <option value="Yes">Yes</option>
+      <option value="No">No</option>
+    </select>
+  </div>
+  <div class="field">
+    <label for="q_sponsor">Will you now or in the future require visa sponsorship?</label>
+    <select id="q_sponsor" name="q_sponsor">
+      <option value="">Select...</option>
+      <option value="Yes">Yes</option>
+      <option value="No">No</option>
+    </select>
+  </div>
+  <div class="field">
+    <label for="q_gender">Gender</label>
+    <select id="q_gender" name="q_gender">
+      <option value="">Select...</option>
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+      <option value="Other">Other</option>
+      <option value="Decline">Decline to self-identify</option>
+    </select>
+  </div>
+  <input type="submit" value="Submit Application">
+</form>
+</body>
+</html>

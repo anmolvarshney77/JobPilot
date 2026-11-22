@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}— Stats{% endblock %}
+{% block content %}
+<h1>Stats</h1>
+
+<div class="card">
+  <h2>Recent Runs</h2>
+  {% if run_rows %}
+  <table>
+    <thead><tr><th>Command</th><th>Status</th><th>Started</th></tr></thead>
+    <tbody>
+      {% for r in run_rows %}
+      <tr>
+        <td>{{ r.command }}</td>
+        <td>{{ r.status }}</td>
+        <td style="font-size:12px;color:#888;">{{ r.started_at }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p style="color:#888;">No runs yet.</p>
+  {% endif %}
+</div>
+
+<div class="card">
+  <h2>LLM Usage</h2>
+  {% if llm_rows %}
+  <table>
+    <thead><tr><th>Model</th><th>Calls</th><th>In tokens</th><th>Out tokens</th><th>Cost (USD)</th></tr></thead>
+    <tbody>
+      {% for r in llm_rows %}
+      <tr>
+        <td>{{ r.model }}</td>
+        <td>{{ r.calls }}</td>
+        <td>{{ r.in_tok }}</td>
+        <td>{{ r.out_tok }}</td>
+        <td>${{ "%.4f" | format(r.cost) }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <p style="margin-top:10px;font-weight:600;">Total: ${{ "%.4f" | format(total_cost) }}</p>
+  {% else %}
+  <p style="color:#888;">No LLM usage yet.</p>
+  {% endif %}
+</div>
+
+<div class="card">
+  <h2>Job Counts by Status</h2>
+  <table>
+    <thead><tr><th>Status</th><th>Count</th></tr></thead>
+    <tbody>
+      {% for row in job_counts %}
+      <tr>
+        <td><span class="badge badge-{{ row.status }}">{{ row.status }}</span></td>
+        <td>{{ row.count }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

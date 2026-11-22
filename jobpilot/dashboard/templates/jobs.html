@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}— Jobs{% endblock %}
+{% block content %}
+<h1>Jobs <span style="font-size:14px;color:#888;">({{ total }} total)</span></h1>
+
+<div class="filters">
+  <span style="font-size:12px;color:#888;padding:5px 0;">Filter:</span>
+  <a href="/?status=" class="filter-btn {% if not current_status %}active{% endif %}">All</a>
+  {% for s in statuses %}
+  <a href="/?status={{ s }}" class="filter-btn {% if current_status == s %}active{% endif %}">{{ s }}</a>
+  {% endfor %}
+</div>
+
+{% if jobs %}
+<table>
+  <thead>
+    <tr>
+      <th>Score</th>
+      <th>Title</th>
+      <th>Company</th>
+      <th>Countries</th>
+      <th>Status</th>
+      <th>Sponsorship</th>
+      <th>Posted</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in jobs %}
+    <tr>
+      <td><strong>{{ row.score }}</strong></td>
+      <td><a href="/jobs/{{ row.job_id }}">{{ row.title }}</a></td>
+      <td>{{ row.company }}</td>
+      <td>{{ row.countries }}</td>
+      <td><span class="badge badge-{{ row.status }}">{{ row.status }}</span></td>
+      <td>{{ row.sponsorship }}</td>
+      <td style="font-size:12px;color:#888;">{{ row.posted_at }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p style="color:#888;">No jobs found{% if current_status %} with status "{{ current_status }}"{% endif %}.</p>
+{% endif %}
+{% endblock %}
