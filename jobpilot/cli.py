@@ -656,12 +656,41 @@ def dashboard(dry_run: DryRun = False) -> None:
 
 
 @app.command()
-def daily(dry_run: DryRun = False) -> None:
-    """Run fetch → score → prepare in sequence."""
-    if dry_run:
-        typer.echo("dry run — no changes made")
-        return
-    typer.echo("daily: running fetch → score → prepare (not yet implemented)")
+def daily(
+    dry_run: DryRun = False,
+    max_prepare: int = typer.Option(10, "--max-prepare", help="Max jobs to tailor per run"),
+    min_score: float = typer.Option(80.0, "--min-score", help="Minimum score for auto-prepare"),
+) -> None:
+    """Run fetch → score → prepare → notify in one shot."""
+    from jobpilot.daily import run_daily
+    from jobpilot.daily_lock import DailyAlreadyRunningError
+
+    try:
+        ok, digest = run_daily(dry_run=dry_run, max_prepare=max_prepare, prepare_min_score=min_score)
+    except DailyAlreadyRunningError as exc:
+        typer.echo(f"Skipping: {exc}", err=True)
+        raise typer.Exit(1)
+
+    if ok:
+        typer.echo(f"\nDaily run complete — {len(digest.top_matches)} top matches, "
+                   f"{len(digest.errors)} errors, "
+                   f"${digest.llm_spend_usd:.2f} LLM spend this month.")
+    else:
+        typer.echo("\nDaily run encountered errors (see logs).", err=True)
+        raise typer.Exit(1)
+
+
+@app.command(hidden=True)
+def catchup() -> None:
+    """Force a daily run regardless of when it last ran (alias for daily with no-lock check)."""
+    from jobpilot.daily import run_daily
+
+    ok, digest = run_daily(dry_run=False)
+    if ok:
+        typer.echo(f"Catch-up run complete — {len(digest.top_matches)} top matches.")
+    else:
+        typer.echo("Catch-up run encountered errors.", err=True)
+        raise typer.Exit(1)
 
 
 @app.command()

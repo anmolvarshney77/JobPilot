@@ -121,6 +121,14 @@ class Settings(BaseSettings):
     database_url: str = "sqlite:///./jobpilot.db"
     adzuna_app_id: str = ""
     adzuna_app_key: str = ""
+    telegram_bot_token: str = ""
+    telegram_chat_id: str = ""
+    smtp_host: str = ""
+    smtp_port: int = 587
+    smtp_user: str = ""
+    smtp_password: str = ""
+    smtp_from: str = ""
+    smtp_to: str = ""
 
 
 def load_profile(path: str | Path) -> ProfileConfig:

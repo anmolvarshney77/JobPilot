@@ -22,6 +22,7 @@ dependencies = [
     "playwright>=1.44",
     "pypdf>=4.0",
     "python-multipart>=0.0.9",
+    "mcp>=1.0",
 ]
 
 [project.optional-dependencies]
@@ -33,6 +34,7 @@ dev = [
 
 [project.scripts]
 jobpilot = "jobpilot.cli:app"
+jobpilot-mcp = "jobpilot.mcp_server:main"
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

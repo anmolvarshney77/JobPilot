@@ -1,0 +1,42 @@
+{
+  "top_matches": [
+    {
+      "title": "Senior Backend Engineer",
+      "company": "Acme Corp",
+      "country": "DE",
+      "score": 92,
+      "sponsorship": "likely",
+      "posted_age_days": 1,
+      "url": "https://jobs.acme.example/sbe-123"
+    },
+    {
+      "title": "Staff Software Engineer",
+      "company": "Beta GmbH",
+      "country": "NL",
+      "score": 87,
+      "sponsorship": "explicit_yes",
+      "posted_age_days": 0,
+      "url": "https://jobs.beta.example/sse-456"
+    }
+  ],
+  "closing_or_closed": [
+    {
+      "title": "Platform Engineer",
+      "company": "Gamma Ltd",
+      "closed_at": "2026-11-21"
+    }
+  ],
+  "follow_ups_due": [
+    {
+      "title": "Backend Engineer",
+      "company": "Delta Inc",
+      "contact": "Alex P",
+      "days_since_sent": 12
+    }
+  ],
+  "llm_spend_usd": 3.42,
+  "llm_budget_usd": 15.0,
+  "errors": [],
+  "run_duration_seconds": 47.3,
+  "dry_run": false
+}
