@@ -51,6 +51,10 @@ def extract_contacts_from_posting(
     for pattern, role in _CONTACT_PATTERNS:
         for m in pattern.finditer(description):
             name = m.group(1).strip()
+            words = name.split()
+            # Reject if any word isn't capitalized — filters false positives from re.I
+            if not (1 <= len(words) <= 4 and all(w[0].isupper() for w in words)):
+                continue
             if len(name.split()) <= 4:  # sanity check: not too many words
                 contacts.append(ContactSuggestion(
                     name=name,

@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}— Applications{% endblock %}
+{% block content %}
+<h1>Applications <span style="font-size:14px;font-weight:400;color:var(--text-muted);">{{ apps | length }}</span></h1>
+
+<div class="card" style="padding:0;">
+  {% if apps %}
+  <table>
+    <thead>
+      <tr>
+        <th>Job</th>
+        <th>Score</th>
+        <th>Submitted</th>
+        <th>Days ago</th>
+        <th>Outcome</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for a in apps %}
+      <tr id="app-row-{{ a.app_id }}">
+        <td style="max-width:300px;">
+          <a href="/jobs/{{ a.job_id }}" style="font-weight:600;">{{ a.title }}</a>
+          <span style="color:var(--text-muted);margin-left:6px;font-size:12px;">{{ a.company }}</span>
+          {% if a.countries and a.countries != "—" %}
+          <span style="display:block;font-size:11px;color:var(--text-muted);">{{ a.countries }}</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if a.score != "—" %}
+          <span style="font-weight:600;">{{ a.score }}</span>
+          {% else %}<span style="color:var(--text-muted);">—</span>{% endif %}
+        </td>
+        <td style="font-size:12px;">{{ a.submitted_at }}</td>
+        <td style="font-size:12px;color:var(--text-muted);">
+          {% if a.days_since is not none %}{{ a.days_since }}d{% else %}—{% endif %}
+        </td>
+        <td>
+          {% if a.outcome == "interview" or a.outcome == "offer" %}
+          <span style="color:var(--success);font-weight:600;">{{ a.outcome }}</span>
+          {% elif a.outcome == "rejected" %}
+          <span style="color:var(--danger);">{{ a.outcome }}</span>
+          {% elif a.outcome == "ghosted" %}
+          <span style="color:var(--text-muted);font-size:12px;">ghosted</span>
+          {% else %}
+          <span style="color:var(--text-muted);font-size:12px;">pending</span>
+          {% endif %}
+        </td>
+        <td style="text-align:right;">
+          <button class="btn btn-secondary btn-sm"
+                  hx-get="/applications/{{ a.app_id }}/detail"
+                  hx-target="#detail-{{ a.app_id }}"
+                  hx-swap="innerHTML"
+                  onclick="toggleDetail(this, 'detail-{{ a.app_id }}')">
+            Details
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="6" style="padding:0;border-bottom:1px solid var(--border);">
+          <div id="detail-{{ a.app_id }}" style="display:none;"></div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div style="padding:40px;text-align:center;color:var(--text-muted);">
+    No applications yet. Run <code>jobpilot apply</code> to submit applications.
+  </div>
+  {% endif %}
+</div>
+
+<script>
+function toggleDetail(btn, id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (el.style.display === 'none') {
+    el.style.display = 'block';
+    btn.textContent = 'Hide';
+  } else {
+    el.style.display = 'none';
+    btn.textContent = 'Details';
+  }
+}
+</script>
+{% endblock %}

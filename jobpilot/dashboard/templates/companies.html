@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}— Companies{% endblock %}
+{% block content %}
+<h1>Companies <span style="font-size:14px;font-weight:400;color:var(--text-muted);">{{ companies | length }}</span></h1>
+
+<div class="card" style="padding:0;">
+  {% if companies %}
+  <table>
+    <thead>
+      <tr>
+        <th>Company</th>
+        <th>ATS</th>
+        <th>Slug</th>
+        <th>Verified</th>
+        <th>Failures</th>
+        <th>Jobs found</th>
+        <th>Last fetch</th>
+        <th>Discovered from</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for c in companies %}
+      <tr>
+        <td style="font-weight:600;">{{ c.name }}</td>
+        <td style="font-size:12px;">{{ c.ats_type }}</td>
+        <td style="font-size:12px;font-family:monospace;color:var(--text-muted);">{{ c.ats_slug }}</td>
+        <td>
+          {% if c.verified %}
+          <span style="color:var(--success);font-size:13px;">✓</span>
+          {% else %}
+          <span style="color:var(--text-muted);font-size:13px;">—</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if c.consecutive_failures > 0 %}
+          <span style="color:{% if c.consecutive_failures >= 3 %}var(--danger){% else %}var(--warning){% endif %};font-weight:600;">
+            {{ c.consecutive_failures }}
+          </span>
+          {% else %}
+          <span style="color:var(--text-muted);">0</span>
+          {% endif %}
+        </td>
+        <td style="font-size:12px;">{{ c.jobs_found }}</td>
+        <td style="font-size:12px;color:var(--text-muted);">{{ c.last_fetch_ok }}</td>
+        <td style="font-size:12px;color:var(--text-muted);">{{ c.source_discovered_from }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div style="padding:40px;text-align:center;color:var(--text-muted);">
+    No companies seeded yet. Run <code>jobpilot fetch</code> to discover companies.
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

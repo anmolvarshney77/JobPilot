@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% block title %}— Insights{% endblock %}
+{% block content %}
+<h1>Insights</h1>
+
+{% if not ready %}
+<div class="card" style="text-align:center;padding:40px;">
+  <p style="font-size:16px;font-weight:600;margin:0 0 8px;">Not enough data yet</p>
+  <p style="color:var(--text-muted);margin:0;">
+    {{ total_with_outcomes }} / {{ needed }} outcomes recorded (interview, rejected, offer, or ghosted required).
+  </p>
+  <p style="color:var(--text-muted);margin-top:8px;font-size:12px;">
+    Keep applying and updating outcomes — insights unlock after {{ needed }} outcomes.
+  </p>
+</div>
+{% else %}
+
+<p style="color:var(--text-muted);margin-top:-8px;margin-bottom:20px;">Based on {{ total_with_outcomes }} outcomes.</p>
+
+{% if suggestions %}
+<div style="margin-bottom:20px;">
+  <h2>Suggestions</h2>
+  {% for s in suggestions %}
+  <div class="suggestion-card">{{ s }}</div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+
+<div class="card">
+  <h2>Interview rate by score band</h2>
+  <table class="insight-table">
+    <thead><tr><th>Score</th><th>Applied</th><th>Interviews</th><th>Rate</th></tr></thead>
+    <tbody>
+      {% for r in score_table %}
+      <tr>
+        <td style="font-weight:600;">{{ r.band }}</td>
+        <td>{{ r.total }}</td>
+        <td>{{ r.interviews }}</td>
+        <td class="insight-rate">{{ r.rate }}%</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="card">
+  <h2>Interview rate by country (top 5)</h2>
+  <table class="insight-table">
+    <thead><tr><th>Country</th><th>Applied</th><th>Interviews</th><th>Rate</th></tr></thead>
+    <tbody>
+      {% for r in country_table %}
+      <tr>
+        <td style="font-weight:600;">{{ r.band }}</td>
+        <td>{{ r.total }}</td>
+        <td>{{ r.interviews }}</td>
+        <td class="insight-rate">{{ r.rate }}%</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="card">
+  <h2>Interview rate by source</h2>
+  <table class="insight-table">
+    <thead><tr><th>Source</th><th>Applied</th><th>Interviews</th><th>Rate</th></tr></thead>
+    <tbody>
+      {% for r in source_table %}
+      <tr>
+        <td style="font-weight:600;">{{ r.band }}</td>
+        <td>{{ r.total }}</td>
+        <td>{{ r.interviews }}</td>
+        <td class="insight-rate">{{ r.rate }}%</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="card">
+  <h2>Interview rate by sponsorship signal</h2>
+  <table class="insight-table">
+    <thead><tr><th>Signal</th><th>Applied</th><th>Interviews</th><th>Rate</th></tr></thead>
+    <tbody>
+      {% for r in spons_table %}
+      <tr>
+        <td style="font-weight:600;">{{ r.band }}</td>
+        <td>{{ r.total }}</td>
+        <td>{{ r.interviews }}</td>
+        <td class="insight-rate">{{ r.rate }}%</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="card">
+  <h2>Interview rate by application speed</h2>
+  <table class="insight-table">
+    <thead><tr><th>Applied within</th><th>Applied</th><th>Interviews</th><th>Rate</th></tr></thead>
+    <tbody>
+      {% for r in days_table %}
+      <tr>
+        <td style="font-weight:600;">{{ r.band }}</td>
+        <td>{{ r.total }}</td>
+        <td>{{ r.interviews }}</td>
+        <td class="insight-rate">{{ r.rate }}%</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="card">
+  <h2>Outreach impact</h2>
+  <table class="insight-table">
+    <thead><tr><th>Outreach</th><th>Applied</th><th>Interviews</th><th>Rate</th></tr></thead>
+    <tbody>
+      {% for r in outreach_table %}
+      <tr>
+        <td style="font-weight:600;">{{ r.band | replace("_", " ") }}</td>
+        <td>{{ r.total }}</td>
+        <td>{{ r.interviews }}</td>
+        <td class="insight-rate">{{ r.rate }}%</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+</div><!-- grid -->
+
+{% endif %}
+{% endblock %}

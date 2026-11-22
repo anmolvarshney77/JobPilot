@@ -6,60 +6,267 @@
 <title>JobPilot {% block title %}{% endblock %}</title>
 <script src="https://unpkg.com/htmx.org@1.9.12"></script>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-         font-size: 14px; color: #1a1a1a; background: #f5f5f5; }
-  nav { background: #1a1a2e; color: #fff; padding: 12px 24px;
-        display: flex; gap: 24px; align-items: center; }
-  nav a { color: #ccc; text-decoration: none; font-size: 14px; }
-  nav a:hover, nav a.active { color: #fff; }
-  nav .brand { font-weight: 700; font-size: 16px; color: #fff; margin-right: 16px; }
-  .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
-  h1 { font-size: 20px; margin-bottom: 16px; }
-  h2 { font-size: 16px; margin-bottom: 12px; }
-  table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 6px;
-          box-shadow: 0 1px 3px rgba(0,0,0,.1); }
-  th { background: #f0f0f0; text-align: left; padding: 10px 12px;
-       font-size: 12px; text-transform: uppercase; letter-spacing: .5px; color: #555; }
-  td { padding: 10px 12px; border-top: 1px solid #eee; vertical-align: top; }
-  tr:hover td { background: #fafafa; }
-  a { color: #2563eb; text-decoration: none; }
+  :root {
+    --bg: #f9fafb;
+    --surface: #ffffff;
+    --border: #e5e7eb;
+    --text: #111827;
+    --text-muted: #6b7280;
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --success: #059669;
+    --danger: #dc2626;
+    --warning: #d97706;
+    --nav-bg: #1e293b;
+    --nav-text: #f1f5f9;
+    --nav-active: #3b82f6;
+    --score-green: #dcfce7; --score-green-text: #166534;
+    --score-blue: #dbeafe;  --score-blue-text: #1e40af;
+    --score-amber: #fef3c7; --score-amber-text: #92400e;
+    --score-grey: #f3f4f6;  --score-grey-text: #374151;
+    --badge-new: #eff6ff; --badge-new-text: #1d4ed8;
+    --badge-shortlisted: #f0fdf4; --badge-shortlisted-text: #166534;
+    --badge-prepared: #fef9c3; --badge-prepared-text: #854d0e;
+    --badge-applied: #f0fdf4; --badge-applied-text: #15803d;
+    --badge-filtered_out: #fef2f2; --badge-filtered_out-text: #991b1b;
+    --badge-closed: #f3f4f6; --badge-closed-text: #374151;
+    --bar-track: #e5e7eb;
+    --bar-fill: #2563eb;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --border: #334155;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --success: #34d399;
+      --danger: #f87171;
+      --warning: #fbbf24;
+      --nav-bg: #0f172a;
+      --nav-text: #f1f5f9;
+      --nav-active: #60a5fa;
+      --score-green: #052e16; --score-green-text: #86efac;
+      --score-blue: #1e3a5f;  --score-blue-text: #93c5fd;
+      --score-amber: #422006; --score-amber-text: #fde68a;
+      --score-grey: #1f2937;  --score-grey-text: #d1d5db;
+      --badge-new: #1e3a5f; --badge-new-text: #93c5fd;
+      --badge-shortlisted: #052e16; --badge-shortlisted-text: #86efac;
+      --badge-prepared: #422006; --badge-prepared-text: #fde68a;
+      --badge-applied: #052e16; --badge-applied-text: #34d399;
+      --badge-filtered_out: #3b0a0a; --badge-filtered_out-text: #fca5a5;
+      --badge-closed: #1f2937; --badge-closed-text: #9ca3af;
+      --bar-track: #334155;
+      --bar-fill: #3b82f6;
+    }
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  nav {
+    background: var(--nav-bg);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    height: 48px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  nav .logo {
+    font-weight: 700;
+    font-size: 16px;
+    color: #60a5fa;
+    margin-right: 20px;
+    text-decoration: none;
+  }
+  nav a {
+    color: var(--nav-text);
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    transition: background 0.15s;
+  }
+  nav a:hover { background: rgba(255,255,255,0.1); }
+  nav a.active { background: rgba(59,130,246,0.25); color: var(--nav-active); font-weight: 600; }
+  main { max-width: 1200px; margin: 0 auto; padding: 24px 20px; }
+  h1 { font-size: 22px; font-weight: 700; margin: 0 0 20px; }
+  h2 { font-size: 16px; font-weight: 600; margin: 0 0 14px; }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  table { width: 100%; border-collapse: collapse; }
+  th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(0,0,0,0.02); }
+  @media (prefers-color-scheme: dark) { tr:hover td { background: rgba(255,255,255,0.03); } }
+  a { color: var(--primary); text-decoration: none; }
   a:hover { text-decoration: underline; }
-  .badge { display: inline-block; padding: 2px 8px; border-radius: 12px;
-           font-size: 11px; font-weight: 600; text-transform: uppercase; }
-  .badge-new { background: #dbeafe; color: #1d4ed8; }
-  .badge-shortlisted { background: #d1fae5; color: #065f46; }
-  .badge-prepared { background: #ede9fe; color: #5b21b6; }
-  .badge-applied { background: #fef3c7; color: #92400e; }
-  .badge-filtered_out { background: #fee2e2; color: #991b1b; }
-  .badge-closed { background: #f3f4f6; color: #6b7280; }
-  .btn { display: inline-block; padding: 6px 14px; border-radius: 4px; cursor: pointer;
-         font-size: 13px; font-weight: 500; border: none; }
-  .btn-primary { background: #2563eb; color: #fff; }
-  .btn-primary:hover { background: #1d4ed8; }
-  .btn-sm { padding: 3px 10px; font-size: 12px; }
-  .alert-red { background: #fee2e2; border-left: 4px solid #dc2626;
-               padding: 12px 16px; margin-bottom: 16px; border-radius: 4px; color: #991b1b; }
-  .filters { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
-  .filter-btn { padding: 5px 14px; border-radius: 20px; font-size: 12px; cursor: pointer;
-                border: 1px solid #ddd; background: #fff; }
-  .filter-btn.active { background: #2563eb; color: #fff; border-color: #2563eb; }
-  .card { background: #fff; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,.1);
-          padding: 16px; margin-bottom: 16px; }
-  pre { background: #f8f8f8; padding: 12px; border-radius: 4px; white-space: pre-wrap;
-        font-size: 13px; border: 1px solid #e5e7eb; }
-  select { padding: 4px 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .badge-new          { background: var(--badge-new);         color: var(--badge-new-text); }
+  .badge-shortlisted  { background: var(--badge-shortlisted);  color: var(--badge-shortlisted-text); }
+  .badge-prepared     { background: var(--badge-prepared);     color: var(--badge-prepared-text); }
+  .badge-applied      { background: var(--badge-applied);      color: var(--badge-applied-text); }
+  .badge-filtered_out { background: var(--badge-filtered_out); color: var(--badge-filtered_out-text); }
+  .badge-closed       { background: var(--badge-closed);       color: var(--badge-closed-text); }
+  .score-pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .score-green { background: var(--score-green); color: var(--score-green-text); }
+  .score-blue  { background: var(--score-blue);  color: var(--score-blue-text); }
+  .score-amber { background: var(--score-amber); color: var(--score-amber-text); }
+  .score-grey  { background: var(--score-grey);  color: var(--score-grey-text); }
+  .score-none  { color: var(--text-muted); font-size: 12px; }
+  .btn {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: background 0.15s;
+  }
+  .btn-sm { padding: 4px 10px; font-size: 12px; }
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-primary:hover { background: var(--primary-hover); }
+  .btn-secondary {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover { background: var(--border); }
+  .btn-danger { background: var(--danger); color: #fff; }
+  .alert-red {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #991b1b;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+  }
+  @media (prefers-color-scheme: dark) {
+    .alert-red { background: #3b0a0a; border-color: #7f1d1d; color: #fca5a5; }
+  }
+  .chip {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    background: #fef9c3;
+    color: #854d0e;
+    margin-right: 4px;
+  }
+  @media (prefers-color-scheme: dark) { .chip { background: #422006; color: #fde68a; } }
+  .chip-fresh { background: #dcfce7; color: #166534; }
+  @media (prefers-color-scheme: dark) { .chip-fresh { background: #052e16; color: #86efac; } }
+  .chip-inject { background: #fef2f2; color: #991b1b; }
+  @media (prefers-color-scheme: dark) { .chip-inject { background: #3b0a0a; color: #fca5a5; } }
+  .filters-bar {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    margin-bottom: 16px;
+    padding: 14px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .filters-bar label { font-size: 11px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px; }
+  .filters-bar select, .filters-bar input {
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 13px;
+    min-width: 100px;
+  }
+  .bar-track {
+    height: 10px;
+    background: var(--bar-track);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    background: var(--bar-fill);
+    border-radius: 999px;
+    transition: width 0.3s ease;
+  }
+  .bar-fill.danger { background: var(--danger); }
+  .insight-table td, .insight-table th { padding: 8px 10px; }
+  .insight-rate {
+    font-weight: 700;
+    color: var(--success);
+  }
+  .suggestion-card {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: #1e40af;
+  }
+  @media (prefers-color-scheme: dark) {
+    .suggestion-card { background: #1e3a5f; border-color: #1d4ed8; color: #93c5fd; }
+  }
+  .detail-panel { display: none; }
+  .detail-panel.open { display: block; }
 </style>
 </head>
 <body>
 <nav>
-  <span class="brand">JobPilot</span>
-  <a href="/">Jobs</a>
-  <a href="/follow-ups">Follow-ups</a>
-  <a href="/stats">Stats</a>
+  <a href="/" class="logo">✈ JobPilot</a>
+  <a href="/" {% if request.url.path == "/" %}class="active"{% endif %}>Jobs</a>
+  <a href="/filtered-out" {% if request.url.path == "/filtered-out" %}class="active"{% endif %}>Filtered Out</a>
+  <a href="/applications" {% if request.url.path == "/applications" %}class="active"{% endif %}>Applications</a>
+  <a href="/companies" {% if request.url.path == "/companies" %}class="active"{% endif %}>Companies</a>
+  <a href="/insights" {% if request.url.path == "/insights" %}class="active"{% endif %}>Insights</a>
+  <a href="/follow-ups" {% if request.url.path == "/follow-ups" %}class="active"{% endif %}>Follow-ups</a>
+  <a href="/stats" {% if request.url.path == "/stats" %}class="active"{% endif %}>Costs</a>
 </nav>
-<div class="container">
+<main>
 {% block content %}{% endblock %}
-</div>
+</main>
 </body>
 </html>

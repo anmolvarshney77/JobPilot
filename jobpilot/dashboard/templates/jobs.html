@@ -1,44 +1,112 @@
 {% extends "base.html" %}
 {% block title %}— Jobs{% endblock %}
 {% block content %}
-<h1>Jobs <span style="font-size:14px;color:#888;">({{ total }} total)</span></h1>
-
-<div class="filters">
-  <span style="font-size:12px;color:#888;padding:5px 0;">Filter:</span>
-  <a href="/?status=" class="filter-btn {% if not current_status %}active{% endif %}">All</a>
-  {% for s in statuses %}
-  <a href="/?status={{ s }}" class="filter-btn {% if current_status == s %}active{% endif %}">{{ s }}</a>
-  {% endfor %}
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+  <h1 style="margin:0;">Jobs <span style="font-size:14px;font-weight:400;color:var(--text-muted);">{{ filtered_count }} / {{ total }}</span></h1>
 </div>
 
-{% if jobs %}
-<table>
-  <thead>
-    <tr>
-      <th>Score</th>
-      <th>Title</th>
-      <th>Company</th>
-      <th>Countries</th>
-      <th>Status</th>
-      <th>Sponsorship</th>
-      <th>Posted</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for row in jobs %}
-    <tr>
-      <td><strong>{{ row.score }}</strong></td>
-      <td><a href="/jobs/{{ row.job_id }}">{{ row.title }}</a></td>
-      <td>{{ row.company }}</td>
-      <td>{{ row.countries }}</td>
-      <td><span class="badge badge-{{ row.status }}">{{ row.status }}</span></td>
-      <td>{{ row.sponsorship }}</td>
-      <td style="font-size:12px;color:#888;">{{ row.posted_at }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% else %}
-<p style="color:#888;">No jobs found{% if current_status %} with status "{{ current_status }}"{% endif %}.</p>
-{% endif %}
+<form method="get" class="filters-bar" id="filter-form">
+  <div>
+    <label>Status</label>
+    <select name="status" onchange="this.form.submit()">
+      <option value="">All</option>
+      {% for s in statuses %}
+      <option value="{{ s }}" {% if s == current_status %}selected{% endif %}>{{ s }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div>
+    <label>Source</label>
+    <select name="source" onchange="this.form.submit()">
+      <option value="">All</option>
+      {% for s in all_sources %}
+      <option value="{{ s }}" {% if s == current_source %}selected{% endif %}>{{ s }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div>
+    <label>Remote</label>
+    <select name="remote_type" onchange="this.form.submit()">
+      <option value="">All</option>
+      {% for r in all_remote_types %}
+      <option value="{{ r }}" {% if r == current_remote_type %}selected{% endif %}>{{ r }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div>
+    <label>Sponsorship</label>
+    <select name="sponsorship" onchange="this.form.submit()">
+      <option value="">All</option>
+      <option value="yes" {% if "yes" == current_sponsorship %}selected{% endif %}>Yes</option>
+      <option value="no" {% if "no" == current_sponsorship %}selected{% endif %}>No</option>
+      <option value="unknown" {% if "unknown" == current_sponsorship %}selected{% endif %}>Unknown</option>
+    </select>
+  </div>
+  <div>
+    <label>Min score</label>
+    <input type="number" name="min_score" value="{{ current_min_score }}" min="0" max="100" style="width:80px;" onchange="this.form.submit()">
+  </div>
+  <div>
+    <label>Sort</label>
+    <select name="sort" onchange="this.form.submit()">
+      <option value="score_desc"  {% if current_sort == "score_desc"  %}selected{% endif %}>Score ↓</option>
+      <option value="score_asc"   {% if current_sort == "score_asc"   %}selected{% endif %}>Score ↑</option>
+      <option value="posted_desc" {% if current_sort == "posted_desc" %}selected{% endif %}>Posted ↓</option>
+      <option value="first_seen_desc" {% if current_sort == "first_seen_desc" %}selected{% endif %}>First seen ↓</option>
+    </select>
+  </div>
+  {% if current_status or current_source or current_sponsorship or current_min_score or current_remote_type %}
+  <div style="align-self:flex-end;">
+    <a href="/" class="btn btn-secondary btn-sm">Clear filters</a>
+  </div>
+  {% endif %}
+</form>
+
+<div class="card" style="padding:0;">
+  {% if jobs %}
+  <table>
+    <thead>
+      <tr>
+        <th>Job</th>
+        <th>Score</th>
+        <th>Sponsorship</th>
+        <th>Location</th>
+        <th>Source</th>
+        <th>Posted</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for j in jobs %}
+      <tr>
+        <td style="max-width:320px;">
+          <a href="/jobs/{{ j.job_id }}" style="font-weight:600;">{{ j.title }}</a>
+          <span style="color:var(--text-muted);margin-left:6px;font-size:12px;">{{ j.company }}</span>
+          {% if j.fresh %}<span class="chip chip-fresh">NEW</span>{% endif %}
+          {% if j.injection %}<span class="chip chip-inject" title="Potential prompt injection in job description">⚠ inj</span>{% endif %}
+        </td>
+        <td>
+          {% if j.score is not none %}
+          <span class="score-pill {{ j.score_class }}">{{ j.score }}</span>
+          {% else %}
+          <span class="score-none">—</span>
+          {% endif %}
+        </td>
+        <td style="font-size:12px;">
+          {% if j.sponsorship == "yes" %}<span style="color:var(--success);">✓ yes</span>
+          {% elif j.sponsorship == "no" %}<span style="color:var(--danger);">✗ no</span>
+          {% else %}<span style="color:var(--text-muted);">?</span>{% endif %}
+        </td>
+        <td style="font-size:12px;color:var(--text-muted);">{{ j.countries }}</td>
+        <td style="font-size:12px;color:var(--text-muted);">{{ j.source }}</td>
+        <td style="font-size:12px;color:var(--text-muted);">{{ j.posted_at }}</td>
+        <td><span class="badge badge-{{ j.status }}">{{ j.status }}</span></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div style="padding:40px;text-align:center;color:var(--text-muted);">No jobs found matching those filters.</div>
+  {% endif %}
+</div>
 {% endblock %}

@@ -6,87 +6,231 @@
 <div class="alert-red">⚠ <strong>Prompt injection detected</strong> in job description — review before proceeding.</div>
 {% endif %}
 
-<div style="margin-bottom:16px;">
-  <a href="/" style="font-size:13px;color:#888;">← Back to jobs</a>
+<div style="margin-bottom:16px;display:flex;gap:12px;align-items:center;">
+  <a href="/" style="font-size:13px;color:var(--text-muted);">← Jobs</a>
+  {% if fresh %}<span class="chip chip-fresh">NEW this week</span>{% endif %}
 </div>
 
 <div class="card">
-  <h1>{{ job.title }}</h1>
-  <p style="color:#555;margin-top:4px;">
-    {{ company_name }} &nbsp;·&nbsp; {{ job.location_raw or "Location unknown" }}
-    &nbsp;·&nbsp; <span class="badge badge-{{ job.status }}">{{ job.status }}</span>
-  </p>
-  {% if job.match_score is not none %}
-  <p style="margin-top:8px;">Score: <strong>{{ job.match_score | int }}</strong>
-    &nbsp;·&nbsp; Sponsorship: <strong>{{ job.sponsorship_signal }}</strong>
-  </p>
-  {% endif %}
-  {% if job.url %}
-  <p style="margin-top:8px;"><a href="{{ job.url }}" target="_blank">View original posting ↗</a></p>
-  {% endif %}
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;">
+    <div>
+      <h1 style="margin:0 0 6px;">{{ job.title }}</h1>
+      <p style="margin:0;color:var(--text-muted);">
+        {{ company_name }}
+        {% if job.location_raw %}&nbsp;·&nbsp; {{ job.location_raw }}{% endif %}
+        {% if job.remote_type %}&nbsp;·&nbsp; <span style="font-size:12px;">{{ job.remote_type }}</span>{% endif %}
+      </p>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+      {% if job.match_score is not none %}
+      <span class="score-pill {{ score_class }}" style="font-size:16px;padding:4px 12px;">{{ job.match_score | int }}</span>
+      {% endif %}
+      <span id="status-badge-{{ job_id }}" class="badge badge-{{ job.status }}">{{ job.status }}</span>
+    </div>
+  </div>
+
+  <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
+    {% if job.url %}
+    <a href="{{ job.url }}" target="_blank" class="btn btn-secondary btn-sm">View posting ↗</a>
+    {% endif %}
+    {% if job.apply_url %}
+    <a href="{{ job.apply_url }}" target="_blank" class="btn btn-secondary btn-sm">Apply page ↗</a>
+    {% endif %}
+    {% for new_status in ["shortlisted", "prepared", "applied", "skipped"] %}
+    {% if job.status != new_status %}
+    <form style="display:inline;" method="post" action="/jobs/{{ job_id }}/status">
+      <input type="hidden" name="new_status" value="{{ new_status }}">
+      <button type="submit" class="btn btn-secondary btn-sm"
+              hx-post="/jobs/{{ job_id }}/status"
+              hx-target="#status-badge-{{ job_id }}"
+              hx-swap="outerHTML"
+              hx-vals='{"new_status": "{{ new_status }}"}'
+              onclick="event.preventDefault(); htmx.trigger(this, 'click');">
+        → {{ new_status }}
+      </button>
+    </form>
+    {% endif %}
+    {% endfor %}
+  </div>
 </div>
 
-{% if match_summary %}
 <div class="card">
   <h2>Match Details</h2>
-  <p style="font-size:13px;color:#555;">{{ match_summary }}</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;">
+    <div>
+      <p style="font-size:12px;color:var(--text-muted);margin:0 0 4px;">Sponsorship</p>
+      <p style="margin:0;font-weight:600;">
+        {% if job.sponsorship_signal == "yes" %}<span style="color:var(--success);">✓ Confirmed</span>
+        {% elif job.sponsorship_signal == "no" %}<span style="color:var(--danger);">✗ Refused</span>
+        {% else %}<span style="color:var(--text-muted);">? Unknown / silent</span>{% endif %}
+      </p>
+    </div>
+    <div>
+      <p style="font-size:12px;color:var(--text-muted);margin:0 0 4px;">Source</p>
+      <p style="margin:0;">{{ job.source }}</p>
+    </div>
+    {% if job.salary_min or job.salary_max %}
+    <div>
+      <p style="font-size:12px;color:var(--text-muted);margin:0 0 4px;">Salary range</p>
+      <p style="margin:0;">
+        {{ job.salary_currency or "" }}
+        {% if job.salary_min %}{{ "{:,.0f}".format(job.salary_min) }}{% endif %}
+        {% if job.salary_max %} – {{ "{:,.0f}".format(job.salary_max) }}{% endif %}
+        {% if job.salary_period %}/ {{ job.salary_period }}{% endif %}
+      </p>
+    </div>
+    {% endif %}
+    {% if required_languages %}
+    <div>
+      <p style="font-size:12px;color:var(--text-muted);margin:0 0 4px;">Required languages</p>
+      <p style="margin:0;">{{ required_languages | join(", ") }}</p>
+    </div>
+    {% endif %}
+  </div>
+
+  {% if details.match_summary %}
+  <p style="font-size:13px;color:var(--text-muted);border-top:1px solid var(--border);padding-top:12px;margin-top:12px;">
+    {{ details.match_summary }}
+  </p>
+  {% endif %}
+
   {% if matched_skills %}
-  <p style="margin-top:8px;"><strong>Matched:</strong> {{ matched_skills | join(", ") }}</p>
+  <div style="margin-top:12px;">
+    <p style="font-size:12px;font-weight:600;color:var(--text-muted);margin:0 0 6px;">Matched skills</p>
+    {% for s in matched_skills %}<span class="chip chip-fresh">{{ s }}</span>{% endfor %}
+  </div>
   {% endif %}
+
   {% if missing_must_haves %}
-  <p style="margin-top:4px;color:#dc2626;"><strong>Missing required:</strong> {{ missing_must_haves | join(", ") }}</p>
+  <div style="margin-top:10px;">
+    <p style="font-size:12px;font-weight:600;color:var(--danger);margin:0 0 6px;">Missing required</p>
+    {% for s in missing_must_haves %}<span class="chip chip-inject">{{ s }}</span>{% endfor %}
+  </div>
+  {% endif %}
+
+  {% if missing_nice_to_haves %}
+  <div style="margin-top:10px;">
+    <p style="font-size:12px;font-weight:600;color:var(--text-muted);margin:0 0 6px;">Nice-to-haves missing</p>
+    {% for s in missing_nice_to_haves %}<span class="chip">{{ s }}</span>{% endfor %}
+  </div>
+  {% endif %}
+
+  {% if red_flags %}
+  <div style="margin-top:10px;">
+    <p style="font-size:12px;font-weight:600;color:var(--warning);margin:0 0 6px;">Red flags</p>
+    {% for f in red_flags %}<span class="chip" style="background:#fef3c7;color:#92400e;">{{ f }}</span>{% endfor %}
+  </div>
   {% endif %}
 </div>
-{% endif %}
 
-{% if job.description %}
+{% if output_exists %}
 <div class="card">
-  <h2>Description</h2>
-  <p style="font-size:13px;color:#444;white-space:pre-line;">{{ job.description[:1000] }}{% if job.description|length > 1000 %}…{% endif %}</p>
+  <h2>Tailored Files</h2>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    {% if pdf_path %}
+    <a href="{{ pdf_path }}" target="_blank" class="btn btn-secondary btn-sm">📄 Resume PDF</a>
+    {% endif %}
+    {% if review_html_path %}
+    <a href="{{ review_html_path }}" target="_blank" class="btn btn-secondary btn-sm">🔍 Review diff</a>
+    {% endif %}
+  </div>
+
+  {% if cover_letter_text %}
+  <details style="margin-top:14px;">
+    <summary style="cursor:pointer;font-weight:600;font-size:13px;">Cover letter</summary>
+    <pre style="margin-top:10px;white-space:pre-wrap;font-size:12px;color:var(--text);background:var(--bg);padding:12px;border-radius:6px;border:1px solid var(--border);">{{ cover_letter_text }}</pre>
+  </details>
+  {% endif %}
+
+  {% if draft_answers %}
+  <div style="margin-top:14px;">
+    <h2>Application answers <span style="font-size:12px;font-weight:400;color:var(--text-muted);">(edit before submitting)</span></h2>
+    <form hx-post="/jobs/{{ job_id }}/save-answers" hx-target="#save-answers-status" hx-swap="innerHTML">
+      {% for key, val in draft_answers.items() %}
+      <div style="margin-bottom:12px;">
+        <label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">{{ key | replace("_", " ") | title }}</label>
+        <textarea name="{{ key }}" rows="3" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;font-size:13px;background:var(--bg);color:var(--text);resize:vertical;">{{ val }}</textarea>
+      </div>
+      {% endfor %}
+      <div style="display:flex;align-items:center;gap:10px;">
+        <button type="submit" class="btn btn-primary btn-sm">Save answers</button>
+        <span id="save-answers-status"></span>
+      </div>
+    </form>
+  </div>
+  {% endif %}
+</div>
+{% else %}
+<div class="card">
+  <h2>Tailored Files</h2>
+  <p style="color:var(--text-muted);font-size:13px;">Not prepared yet. Run <code>jobpilot prepare</code> to generate resume, cover letter, and answers.</p>
 </div>
 {% endif %}
 
 <div class="card">
-  <h2>Outreach ({{ outreach_records | length }})</h2>
-  {% if outreach_records %}
-  {% for rec in outreach_records %}
-  <div id="outreach-{{ rec.id }}" style="border:1px solid #e5e7eb;border-radius:6px;padding:12px;margin-bottom:12px;">
-    <div style="display:flex;justify-content:space-between;align-items:center;">
+  <h2>Outreach ({{ outreach_data | length }})</h2>
+  {% if outreach_data %}
+  {% for rec in outreach_data %}
+  <div id="outreach-{{ rec.id }}" style="border:1px solid var(--border);border-radius:6px;padding:14px;margin-bottom:12px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
       <strong>{{ rec.contact_name }}</strong>
-      <span style="font-size:12px;color:#888;">{{ rec.contact_role or "" }}</span>
+      <span style="font-size:12px;color:var(--text-muted);">{{ rec.contact_role or "" }}</span>
     </div>
     {% if rec.contact_url %}
-    <p style="margin-top:4px;"><a href="{{ rec.contact_url }}" target="_blank">{{ rec.contact_url }}</a></p>
+    <p style="margin:0 0 8px;font-size:12px;">
+      <a href="{{ rec.contact_url }}" target="_blank">{{ rec.contact_url }}</a>
+    </p>
     {% endif %}
-    {% if rec.message_draft %}
-    <pre style="margin-top:8px;">{{ rec.message_draft }}</pre>
+
+    {% if rec.linkedin_note %}
+    <details style="margin-bottom:8px;">
+      <summary style="cursor:pointer;font-size:12px;color:var(--primary);">LinkedIn note</summary>
+      <pre style="margin-top:6px;white-space:pre-wrap;font-size:12px;background:var(--bg);padding:10px;border-radius:4px;border:1px solid var(--border);">{{ rec.linkedin_note }}</pre>
+    </details>
     {% endif %}
-    <div style="margin-top:10px;display:flex;gap:10px;align-items:center;">
+
+    {% if rec.email_body %}
+    <details style="margin-bottom:10px;">
+      <summary style="cursor:pointer;font-size:12px;color:var(--primary);">Email draft</summary>
+      <pre style="margin-top:6px;white-space:pre-wrap;font-size:12px;background:var(--bg);padding:10px;border-radius:4px;border:1px solid var(--border);">{{ rec.email_body }}</pre>
+    </details>
+    {% endif %}
+
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
       {% if not rec.sent_at %}
       <button class="btn btn-primary btn-sm"
               hx-post="/outreach/{{ rec.id }}/mark-sent"
               hx-target="#outreach-{{ rec.id }}"
               hx-swap="outerHTML">Mark as sent</button>
       {% else %}
-      <span style="font-size:12px;color:#059669;">✓ Sent {{ rec.sent_at }}</span>
+      <span style="font-size:12px;color:var(--success);">✓ Sent {{ rec.sent_at }}</span>
       {% endif %}
+
       <select hx-post="/outreach/{{ rec.id }}/reply"
               hx-target="#outreach-reply-{{ rec.id }}"
-              hx-swap="outerHTML"
-              name="reply_status">
+              hx-swap="innerHTML"
+              name="reply_status"
+              style="padding:4px 8px;border:1px solid var(--border);border-radius:4px;font-size:12px;background:var(--bg);color:var(--text);">
         <option value="">Reply status…</option>
-        <option value="no_reply" {% if rec.reply_status == "no_reply" %}selected{% endif %}>No reply</option>
-        <option value="replied" {% if rec.reply_status == "replied" %}selected{% endif %}>Replied</option>
-        <option value="interested" {% if rec.reply_status == "interested" %}selected{% endif %}>Interested</option>
+        <option value="no_reply"       {% if rec.reply_status == "no_reply"       %}selected{% endif %}>No reply</option>
+        <option value="replied"        {% if rec.reply_status == "replied"        %}selected{% endif %}>Replied</option>
+        <option value="interested"     {% if rec.reply_status == "interested"     %}selected{% endif %}>Interested</option>
         <option value="not_interested" {% if rec.reply_status == "not_interested" %}selected{% endif %}>Not interested</option>
       </select>
-      <span id="outreach-reply-{{ rec.id }}"></span>
+      <span id="outreach-reply-{{ rec.id }}" style="font-size:12px;color:var(--success);"></span>
     </div>
   </div>
   {% endfor %}
   {% else %}
-  <p style="color:#888;">No outreach drafted yet. Run <code>jobpilot outreach</code>.</p>
+  <p style="color:var(--text-muted);">No outreach drafted yet. Run <code>jobpilot outreach</code>.</p>
   {% endif %}
 </div>
+
+{% if job.description %}
+<div class="card">
+  <h2>Description</h2>
+  <pre style="white-space:pre-wrap;font-size:12px;color:var(--text-muted);max-height:300px;overflow:auto;background:var(--bg);padding:12px;border-radius:6px;border:1px solid var(--border);">{{ job.description[:2000] }}{% if job.description|length > 2000 %}…{% endif %}</pre>
+</div>
+{% endif %}
 
 {% endblock %}

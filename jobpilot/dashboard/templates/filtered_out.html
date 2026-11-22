@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}— Filtered Out{% endblock %}
+{% block content %}
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+  <h1 style="margin:0;">Filtered Out <span style="font-size:14px;font-weight:400;color:var(--text-muted);">{{ total }} jobs</span></h1>
+  <p style="font-size:12px;color:var(--text-muted);margin:0;">Restore a job to move it back to <em>new</em> for rescoring.</p>
+</div>
+
+{% if grouped %}
+{% for reason, jobs in grouped.items() %}
+<div class="card" style="padding:0;margin-bottom:20px;">
+  <div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+    <h2 style="margin:0;font-size:14px;">{{ reason | replace("_", " ") | title }}</h2>
+    <span style="font-size:12px;color:var(--text-muted);">{{ jobs | length }} job{{ "s" if jobs | length != 1 }}</span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Job</th>
+        <th>Score</th>
+        <th>Location</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for j in jobs %}
+      <tr id="job-row-{{ j.job_id }}">
+        <td>
+          <a href="/jobs/{{ j.job_id }}" style="font-weight:600;">{{ j.title }}</a>
+          <span style="color:var(--text-muted);margin-left:6px;font-size:12px;">{{ j.company }}</span>
+        </td>
+        <td>
+          {% if j.score != "—" %}
+          <span class="score-pill {{ j.score_class }}">{{ j.score }}</span>
+          {% else %}
+          <span class="score-none">—</span>
+          {% endif %}
+        </td>
+        <td style="font-size:12px;color:var(--text-muted);">{{ j.countries }}</td>
+        <td style="text-align:right;">
+          <button class="btn btn-secondary btn-sm"
+                  hx-post="/jobs/{{ j.job_id }}/restore"
+                  hx-target="#job-row-{{ j.job_id }}"
+                  hx-swap="outerHTML">
+            Restore
+          </button>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endfor %}
+{% else %}
+<div class="card" style="text-align:center;padding:40px;color:var(--text-muted);">
+  No filtered-out jobs.
+</div>
+{% endif %}
+{% endblock %}
