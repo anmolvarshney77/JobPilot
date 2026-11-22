@@ -720,3 +720,26 @@ def stats(dry_run: DryRun = False) -> None:
         typer.echo(f"\n  Total cost: ${total_cost:.4f}")
     else:
         typer.echo("  (no LLM usage yet)")
+
+
+@app.command(hidden=True)
+def seed_test_data() -> None:
+    """Seed the database with realistic test data for local dashboard development."""
+    import os
+
+    from sqlalchemy import create_engine
+    from sqlalchemy.orm import sessionmaker
+
+    from jobpilot.db import Base
+
+    db_url = os.environ.get("DATABASE_URL", "sqlite:///./jobpilot.db")
+    eng = create_engine(db_url, connect_args={"check_same_thread": False})
+    Base.metadata.create_all(eng)
+    Session = sessionmaker(bind=eng, expire_on_commit=False)
+
+    from jobpilot.dashboard.seeder import seed_test_data as _seed
+
+    with Session() as session:
+        _seed(session)
+
+    typer.echo("✓ Test data seeded. Run `jobpilot dashboard` to view.")
