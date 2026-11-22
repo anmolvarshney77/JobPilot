@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workzag-jobs>
+  <position>
+    <id>personio-1</id>
+    <name>Software Engineer (m/w/d)</name>
+    <office>Munich</office>
+    <department>Engineering</department>
+    <recruitingCategory>Software Development</recruitingCategory>
+    <jobDescriptions>
+      <jobDescription>
+        <name>Your responsibilities</name>
+        <value><![CDATA[<p>You will build backend services using Python and FastAPI.</p>]]></value>
+      </jobDescription>
+    </jobDescriptions>
+  </position>
+  <position>
+    <id>personio-2</id>
+    <name>Frontend Developer</name>
+    <office>Berlin</office>
+    <department>Product</department>
+    <recruitingCategory>Software Development</recruitingCategory>
+    <jobDescriptions>
+      <jobDescription>
+        <name>About the role</name>
+        <value><![CDATA[<p>React developer for our Berlin office.</p>]]></value>
+      </jobDescription>
+    </jobDescriptions>
+  </position>
+</workzag-jobs>

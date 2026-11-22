@@ -8,6 +8,7 @@ scoring:
   min_match_score: 0.6
   sponsorship_required: true
   boost_remote: 0.1
+  min_keyword_score: 0.1
 
 rate_limits:
   fetch_delay_seconds: 2.0

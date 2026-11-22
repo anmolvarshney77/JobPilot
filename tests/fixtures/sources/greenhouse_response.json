@@ -1,0 +1,20 @@
+{
+  "jobs": [
+    {
+      "id": 12345,
+      "title": "Backend Engineer",
+      "location": {"name": "Berlin, Germany"},
+      "absolute_url": "https://boards.greenhouse.io/testco/jobs/12345",
+      "content": "<p>We are looking for a backend engineer. We offer visa sponsorship for qualified candidates.</p>",
+      "metadata": []
+    },
+    {
+      "id": 67890,
+      "title": "Senior Software Engineer",
+      "location": {"name": "Remote (Europe)"},
+      "absolute_url": "https://boards.greenhouse.io/testco/jobs/67890",
+      "content": "<p>Senior role. We do not sponsor visas at this time.</p>",
+      "metadata": []
+    }
+  ]
+}

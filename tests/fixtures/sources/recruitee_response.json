@@ -1,0 +1,18 @@
+{
+  "offers": [
+    {
+      "id": 1001,
+      "title": "Python Backend Engineer",
+      "location": "Warsaw, Poland",
+      "slug": "python-backend-engineer",
+      "description": "<p>We are looking for a Python backend engineer to join our Warsaw team.</p>"
+    },
+    {
+      "id": 1002,
+      "title": "DevOps Engineer",
+      "location": "Remote",
+      "slug": "devops-engineer",
+      "description": "<p>DevOps role, remote across Poland and Europe.</p>"
+    }
+  ]
+}

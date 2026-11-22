@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any
 
 from pydantic import BaseModel, ValidationError
@@ -42,7 +42,7 @@ class LLMClient:
         self._session_factory = db_session_factory
 
     def _get_monthly_spend(self) -> float:
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc).replace(tzinfo=None)
         month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
         with self._session_factory() as session:
             from sqlalchemy import func, select

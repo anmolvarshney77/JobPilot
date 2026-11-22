@@ -1,0 +1,27 @@
+{
+  "content": [
+    {
+      "id": "sr-job-1",
+      "name": "Backend Developer",
+      "location": {
+        "city": "Stockholm",
+        "country": "Sweden"
+      },
+      "ref": "https://jobs.smartrecruiters.com/testco/sr-job-1",
+      "releasedDate": "2024-02-01T09:00:00Z"
+    },
+    {
+      "id": "sr-job-2",
+      "name": "Node.js Engineer",
+      "location": {
+        "city": "London",
+        "country": "United Kingdom"
+      },
+      "ref": "https://jobs.smartrecruiters.com/testco/sr-job-2",
+      "releasedDate": "2024-02-05T14:00:00Z"
+    }
+  ],
+  "totalFound": 2,
+  "offset": 0,
+  "limit": 10
+}

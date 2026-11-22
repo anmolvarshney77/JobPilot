@@ -1,0 +1,414 @@
+companies:
+  # --- Greenhouse ---
+  - name: "Delivery Hero"
+    ats_type: "greenhouse"
+    ats_slug: "deliveryhero"
+    hq_country: "DE"
+    known_sponsor: true
+    verified: false
+
+  - name: "Zalando"
+    ats_type: "greenhouse"
+    ats_slug: "zalando"
+    hq_country: "DE"
+    known_sponsor: true
+    verified: false
+
+  - name: "HelloFresh"
+    ats_type: "greenhouse"
+    ats_slug: "hellofreshgroup"
+    hq_country: "DE"
+    known_sponsor: true
+    verified: false
+
+  - name: "GetYourGuide"
+    ats_type: "greenhouse"
+    ats_slug: "getyourguide"
+    hq_country: "DE"
+    known_sponsor: true
+    verified: false
+
+  - name: "Contentful"
+    ats_type: "greenhouse"
+    ats_slug: "contentful"
+    hq_country: "DE"
+    known_sponsor: true
+    verified: false
+
+  - name: "SumUp"
+    ats_type: "greenhouse"
+    ats_slug: "sumup"
+    hq_country: "DE"
+    known_sponsor: true
+    verified: false
+
+  - name: "N26"
+    ats_type: "greenhouse"
+    ats_slug: "n26"
+    hq_country: "DE"
+    known_sponsor: true
+    verified: false
+
+  - name: "Blinkist"
+    ats_type: "greenhouse"
+    ats_slug: "blinkist"
+    hq_country: "DE"
+    known_sponsor: false
+    verified: false
+
+  - name: "Monzo"
+    ats_type: "greenhouse"
+    ats_slug: "monzo"
+    hq_country: "GB"
+    known_sponsor: true
+    verified: false
+
+  - name: "Revolut"
+    ats_type: "greenhouse"
+    ats_slug: "revolut"
+    hq_country: "GB"
+    known_sponsor: true
+    verified: false
+
+  - name: "Skyscanner"
+    ats_type: "greenhouse"
+    ats_slug: "skyscanner"
+    hq_country: "GB"
+    known_sponsor: true
+    verified: false
+
+  - name: "Synthesia"
+    ats_type: "greenhouse"
+    ats_slug: "synthesia"
+    hq_country: "GB"
+    known_sponsor: true
+    verified: false
+
+  - name: "ElevenLabs"
+    ats_type: "greenhouse"
+    ats_slug: "elevenlabs"
+    hq_country: "US"
+    known_sponsor: true
+    verified: false
+
+  - name: "Miro"
+    ats_type: "greenhouse"
+    ats_slug: "miro"
+    hq_country: "NL"
+    known_sponsor: true
+    verified: false
+
+  - name: "Figma"
+    ats_type: "greenhouse"
+    ats_slug: "figma"
+    hq_country: "US"
+    known_sponsor: true
+    verified: false
+
+  - name: "Notion"
+    ats_type: "greenhouse"
+    ats_slug: "notion"
+    hq_country: "US"
+    known_sponsor: true
+    verified: false
+
+  - name: "Linear"
+    ats_type: "greenhouse"
+    ats_slug: "linear"
+    hq_country: "US"
+    known_sponsor: true
+    verified: false
+
+  - name: "Vercel"
+    ats_type: "greenhouse"
+    ats_slug: "vercel"
+    hq_country: "US"
+    known_sponsor: true
+    verified: false
+
+  - name: "Netlify"
+    ats_type: "greenhouse"
+    ats_slug: "netlify"
+    hq_country: "US"
+    known_sponsor: true
+    verified: false
+
+  - name: "Stripe"
+    ats_type: "greenhouse"
+    ats_slug: "stripe"
+    hq_country: "US"
+    known_sponsor: true
+    verified: false
+
+  - name: "Airbnb"
+    ats_type: "greenhouse"
+    ats_slug: "airbnb"
+    hq_country: "US"
+    known_sponsor: true
+    verified: false
+
+  - name: "Typeform"
+    ats_type: "greenhouse"
+    ats_slug: "typeform"
+    hq_country: "ES"
+    known_sponsor: true
+    verified: false
+
+  # --- Lever ---
+  - name: "Klarna"
+    ats_type: "lever"
+    ats_slug: "klarna"
+    hq_country: "SE"
+    known_sponsor: true
+    verified: false
+
+  - name: "Booking.com"
+    ats_type: "lever"
+    ats_slug: "bookingcom"
+    hq_country: "NL"
+    known_sponsor: true
+    verified: false
+
+  - name: "Mollie"
+    ats_type: "lever"
+    ats_slug: "mollie"
+    hq_country: "NL"
+    known_sponsor: true
+    verified: false
+
+  - name: "Wise"
+    ats_type: "lever"
+    ats_slug: "transferwise"
+    hq_country: "GB"
+    known_sponsor: true
+    verified: false
+
+  - name: "Remote.com"
+    ats_type: "lever"
+    ats_slug: "remote"
+    hq_country: "remote"
+    known_sponsor: true
+    verified: false
+
+  - name: "Deel"
+    ats_type: "lever"
+    ats_slug: "deel"
+    hq_country: "remote"
+    known_sponsor: true
+    verified: false
+
+  - name: "GitLab"
+    ats_type: "lever"
+    ats_slug: "gitlab"
+    hq_country: "remote"
+    known_sponsor: true
+    verified: false
+
+  - name: "Automattic"
+    ats_type: "lever"
+    ats_slug: "automattic"
+    hq_country: "remote"
+    known_sponsor: true
+    verified: false
+
+  - name: "Brainly"
+    ats_type: "lever"
+    ats_slug: "brainly"
+    hq_country: "PL"
+    known_sponsor: true
+    verified: false
+
+  - name: "DocPlanner"
+    ats_type: "lever"
+    ats_slug: "docplanner"
+    hq_country: "PL"
+    known_sponsor: true
+    verified: false
+
+  - name: "Smallpdf"
+    ats_type: "lever"
+    ats_slug: "smallpdf"
+    hq_country: "CH"
+    known_sponsor: false
+    verified: false
+
+  - name: "Loom"
+    ats_type: "lever"
+    ats_slug: "loom"
+    hq_country: "US"
+    known_sponsor: true
+    verified: false
+
+  # --- Ashby ---
+  - name: "Doist"
+    ats_type: "ashby"
+    ats_slug: "doist"
+    hq_country: "PT"
+    known_sponsor: true
+    verified: false
+
+  - name: "Factorial HR"
+    ats_type: "ashby"
+    ats_slug: "factorial"
+    hq_country: "ES"
+    known_sponsor: false
+    verified: false
+
+  - name: "Wallapop"
+    ats_type: "ashby"
+    ats_slug: "wallapop"
+    hq_country: "ES"
+    known_sponsor: false
+    verified: false
+
+  - name: "Glovo"
+    ats_type: "ashby"
+    ats_slug: "glovoapp"
+    hq_country: "ES"
+    known_sponsor: true
+    verified: false
+
+  - name: "Cabify"
+    ats_type: "ashby"
+    ats_slug: "cabify"
+    hq_country: "ES"
+    known_sponsor: false
+    verified: false
+
+  - name: "TravelPerk"
+    ats_type: "ashby"
+    ats_slug: "travelperk"
+    hq_country: "ES"
+    known_sponsor: true
+    verified: false
+
+  - name: "Pitch"
+    ats_type: "ashby"
+    ats_slug: "pitch"
+    hq_country: "DE"
+    known_sponsor: true
+    verified: false
+
+  - name: "Qonto"
+    ats_type: "ashby"
+    ats_slug: "qonto"
+    hq_country: "FR"
+    known_sponsor: true
+    verified: false
+
+  - name: "Pricehubble"
+    ats_type: "ashby"
+    ats_slug: "pricehubble"
+    hq_country: "CH"
+    known_sponsor: false
+    verified: false
+
+  # --- SmartRecruiters ---
+  - name: "Spotify"
+    ats_type: "smartrecruiters"
+    ats_slug: "spotify"
+    hq_country: "SE"
+    known_sponsor: true
+    verified: false
+
+  - name: "OLX"
+    ats_type: "smartrecruiters"
+    ats_slug: "olxgroup"
+    hq_country: "NL"
+    known_sponsor: true
+    verified: false
+
+  - name: "JustEat Takeaway"
+    ats_type: "smartrecruiters"
+    ats_slug: "justeattakeaway"
+    hq_country: "NL"
+    known_sponsor: true
+    verified: false
+
+  - name: "Adyen"
+    ats_type: "smartrecruiters"
+    ats_slug: "adyen"
+    hq_country: "NL"
+    known_sponsor: true
+    verified: false
+
+  - name: "Allegro"
+    ats_type: "smartrecruiters"
+    ats_slug: "allegro"
+    hq_country: "PL"
+    known_sponsor: true
+    verified: false
+
+  # --- Personio ---
+  - name: "Personio"
+    ats_type: "personio"
+    ats_slug: "personio"
+    hq_country: "DE"
+    known_sponsor: true
+    verified: false
+
+  - name: "Jimdo"
+    ats_type: "personio"
+    ats_slug: "jimdo"
+    hq_country: "DE"
+    known_sponsor: false
+    verified: false
+
+  # --- Recruitee ---
+  - name: "Brainly (Recruitee)"
+    ats_type: "recruitee"
+    ats_slug: "brainly"
+    hq_country: "PL"
+    known_sponsor: true
+    verified: false
+
+  - name: "Piktochart"
+    ats_type: "recruitee"
+    ats_slug: "piktochart"
+    hq_country: "MY"
+    known_sponsor: false
+    verified: false
+
+  # --- Workable ---
+  - name: "Skroutz"
+    ats_type: "workable"
+    ats_slug: "skroutz"
+    hq_country: "GR"
+    known_sponsor: false
+    verified: false
+
+  - name: "Vinted"
+    ats_type: "workable"
+    ats_slug: "vinted"
+    hq_country: "LT"
+    known_sponsor: true
+    verified: false
+
+  - name: "Beat"
+    ats_type: "workable"
+    ats_slug: "thebeat"
+    hq_country: "GR"
+    known_sponsor: false
+    verified: false
+
+  # --- Additional greenhouse ---
+  - name: "Datadog"
+    ats_type: "greenhouse"
+    ats_slug: "datadog"
+    hq_country: "US"
+    known_sponsor: true
+    verified: false
+
+  - name: "Elastic"
+    ats_type: "greenhouse"
+    ats_slug: "elastic"
+    hq_country: "US"
+    known_sponsor: true
+    verified: false
+
+  - name: "Cloudflare"
+    ats_type: "greenhouse"
+    ats_slug: "cloudflare"
+    hq_country: "US"
+    known_sponsor: true
+    verified: false

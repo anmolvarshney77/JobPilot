@@ -1,0 +1,26 @@
+{
+  "jobs": [
+    {
+      "id": 90001,
+      "url": "https://remotive.com/remote-jobs/software-dev/swe-1",
+      "title": "Software Engineer",
+      "company_name": "RemoteCo",
+      "candidate_required_location": "Worldwide",
+      "description": "<p>Software engineer, fully remote, worldwide candidates welcome.</p>",
+      "salary": "",
+      "job_type": "full_time",
+      "publication_date": "2024-03-10T08:00:00Z"
+    },
+    {
+      "id": 90002,
+      "url": "https://remotive.com/remote-jobs/software-dev/swe-2",
+      "title": "Python Developer",
+      "company_name": "EuroCo",
+      "candidate_required_location": "Europe",
+      "description": "<p>Python developer, remote within Europe.</p>",
+      "salary": "$80,000 - $100,000",
+      "job_type": "full_time",
+      "publication_date": "2024-03-12T09:00:00Z"
+    }
+  ]
+}

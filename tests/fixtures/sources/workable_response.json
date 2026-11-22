@@ -1,0 +1,32 @@
+{
+  "results": [
+    {
+      "id": "workable-1",
+      "shortcode": "ABC123",
+      "title": "Software Engineer",
+      "location": {
+        "city": "Athens",
+        "country": "Greece",
+        "remote": false
+      },
+      "url": "https://apply.workable.com/testco/j/ABC123",
+      "description": {
+        "html": "<p>Software engineer role in Athens.</p>"
+      }
+    },
+    {
+      "id": "workable-2",
+      "shortcode": "DEF456",
+      "title": "Full Stack Developer",
+      "location": {
+        "city": "",
+        "country": "",
+        "remote": true
+      },
+      "url": "https://apply.workable.com/testco/j/DEF456",
+      "description": {
+        "html": "<p>Full stack developer, remote-first.</p>"
+      }
+    }
+  ]
+}

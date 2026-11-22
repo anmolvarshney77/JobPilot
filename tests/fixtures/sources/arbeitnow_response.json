@@ -1,0 +1,33 @@
+{
+  "data": [
+    {
+      "slug": "backend-engineer-at-acme",
+      "title": "Backend Engineer",
+      "company_name": "Acme Corp",
+      "location": "Berlin, Germany",
+      "remote": false,
+      "description": "<p>Backend engineer role in Berlin. Visa sponsorship available.</p>",
+      "url": "https://www.arbeitnow.com/jobs/backend-engineer-at-acme",
+      "visa_sponsorship": true,
+      "created_at": "2024-03-01T10:00:00Z",
+      "tags": ["python", "backend"]
+    },
+    {
+      "slug": "frontend-dev-at-globaltech",
+      "title": "Frontend Developer",
+      "company_name": "GlobalTech",
+      "location": "Remote",
+      "remote": true,
+      "description": "<p>Frontend developer, fully remote.</p>",
+      "url": "https://www.arbeitnow.com/jobs/frontend-dev-at-globaltech",
+      "visa_sponsorship": false,
+      "created_at": "2024-03-05T12:00:00Z",
+      "tags": ["react", "typescript"]
+    }
+  ],
+  "links": {
+    "first": "https://www.arbeitnow.com/api/job-board-api",
+    "last": "https://www.arbeitnow.com/api/job-board-api",
+    "next": null
+  }
+}

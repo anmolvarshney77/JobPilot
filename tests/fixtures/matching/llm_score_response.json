@@ -1,0 +1,19 @@
+{
+  "score": 75,
+  "required_years": 3,
+  "seniority_fit": "match",
+  "required_languages": [
+    {"language": "English", "level": "B2", "mandatory": true}
+  ],
+  "remote_allowed_countries": null,
+  "candidate_location_eligible": true,
+  "sponsorship_assessment": "likely",
+  "sponsorship_evidence": "visa sponsorship available for qualified candidates",
+  "matched_skills": ["Python", "FastAPI", "PostgreSQL"],
+  "missing_must_haves": [],
+  "missing_nice_to_haves": ["Docker"],
+  "salary_meets_expectation": true,
+  "red_flags": [],
+  "prompt_injection_detected": false,
+  "one_line_summary": "Strong Python/FastAPI match in Berlin with likely sponsorship and competitive salary."
+}

@@ -1,0 +1,28 @@
+[
+  {
+    "id": "abc-lever-1",
+    "text": "Python Developer",
+    "categories": {
+      "location": "Amsterdam, Netherlands",
+      "team": "Engineering"
+    },
+    "hostedUrl": "https://jobs.lever.co/testco/abc-lever-1",
+    "applyUrl": "https://jobs.lever.co/testco/abc-lever-1/apply",
+    "description": "<p>We are hiring a Python developer to join our Amsterdam team.</p>",
+    "descriptionPlain": "We are hiring a Python developer to join our Amsterdam team.",
+    "createdAt": 1700000000000
+  },
+  {
+    "id": "abc-lever-2",
+    "text": "Full Stack Engineer",
+    "categories": {
+      "location": "Remote",
+      "team": "Platform"
+    },
+    "hostedUrl": "https://jobs.lever.co/testco/abc-lever-2",
+    "applyUrl": "https://jobs.lever.co/testco/abc-lever-2/apply",
+    "description": "<p>Full stack role, fully remote.</p>",
+    "descriptionPlain": "Full stack role, fully remote.",
+    "createdAt": 1701000000000
+  }
+]

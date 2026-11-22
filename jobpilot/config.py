@@ -100,6 +100,7 @@ class ScoringConfig(BaseModel):
     min_match_score: float
     sponsorship_required: bool
     boost_remote: float
+    min_keyword_score: float = 0.1
 
 
 class RateLimitConfig(BaseModel):
@@ -118,6 +119,8 @@ class Settings(BaseSettings):
 
     anthropic_api_key: str = ""
     database_url: str = "sqlite:///./jobpilot.db"
+    adzuna_app_id: str = ""
+    adzuna_app_key: str = ""
 
 
 def load_profile(path: str | Path) -> ProfileConfig:
@@ -133,6 +136,10 @@ def load_profile(path: str | Path) -> ProfileConfig:
         return ProfileConfig.model_validate(data)
     except Exception as e:
         raise ValueError(f"Profile validation failed ({path}): {e}") from e
+
+
+def load_settings() -> "Settings":
+    return Settings()  # type: ignore[call-arg]
 
 
 def load_app_config(path: str | Path = "config.yaml") -> AppConfig:

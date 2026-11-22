@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 import pytest
 from sqlalchemy import create_engine, inspect
@@ -37,7 +37,7 @@ def test_company_insert(session):
     company = Company(
         name="Acme Corp",
         normalized_name="acme-corp",
-        added_at=datetime.utcnow(),
+        added_at=datetime.now(timezone.utc).replace(tzinfo=None),
     )
     session.add(company)
     session.commit()
