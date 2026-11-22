@@ -1,0 +1,23 @@
+{
+  "summary_id": "s1",
+  "cover_letter_needed": false,
+  "sections": [
+    {
+      "section": "experience",
+      "employer": "Acme Corp",
+      "bullet_ids": ["e1", "e2"],
+      "rephrasings": {
+        "e1": "Built REST APIs serving 50,000 requests/day using FastAPI.",
+        "e2": "Designed PostgreSQL schemas for a multi-tenant SaaS platform using FastAPI and Kubernetes."
+      }
+    },
+    {
+      "section": "projects",
+      "employer": null,
+      "bullet_ids": ["p1"],
+      "rephrasings": {
+        "p1": "Deployed containerised Python service to AWS Lambda."
+      }
+    }
+  ]
+}

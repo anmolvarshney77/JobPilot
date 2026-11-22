@@ -408,12 +408,91 @@ def score(dry_run: DryRun = False) -> None:
 
 
 @app.command()
-def prepare(dry_run: DryRun = False) -> None:
+def prepare(
+    dry_run: DryRun = False,
+    limit: int = typer.Option(10, "--limit", help="Max jobs to prepare"),
+) -> None:
     """Tailor resume and draft cover letter for shortlisted jobs."""
+    import os
+    from pathlib import Path
+
+    from sqlalchemy import create_engine, select
+    from sqlalchemy.orm import sessionmaker
+
+    from jobpilot.db import Company, Job
+    from jobpilot.llm import LLMClient
+    from jobpilot.tailoring import run_tailoring
+    from jobpilot.tailoring.resume_parser import parse_master_resume
+
+    profile, cfg = _load_configs()
+    resume = parse_master_resume(profile.resume_master_path)
+
+    db_url = os.environ.get("DATABASE_URL", "sqlite:///./jobpilot.db")
+    engine = create_engine(db_url, connect_args={"check_same_thread": False})
+    Session = sessionmaker(bind=engine, expire_on_commit=False)
+
+    with Session() as session:
+        jobs = session.execute(
+            select(Job)
+            .where(Job.status == "shortlisted")
+            .order_by(Job.match_score.desc())
+            .limit(limit)
+        ).scalars().all()
+
+        if not jobs:
+            typer.echo("No shortlisted jobs to prepare.")
+            return
+
+        company_ids = {j.company_id for j in jobs}
+        companies_list = session.execute(
+            select(Company).where(Company.id.in_(company_ids))
+        ).scalars().all()
+        companies = {c.id: c for c in companies_list}
+
+        llm_client = LLMClient(cfg, Session)
+
+        results = run_tailoring(
+            jobs=list(jobs),
+            companies=companies,
+            profile=profile,
+            app_config=cfg,
+            session=session,
+            llm_client=llm_client,
+            output_root=Path("output"),
+            dry_run=dry_run,
+        )
+
+        if not dry_run:
+            session.commit()
+
+    skipped: dict[str, int] = {}
+    prepared_count = 0
+    all_pdf_warnings: list[str] = []
+
+    for r in results:
+        if r.skipped_reason:
+            skipped[r.skipped_reason] = skipped.get(r.skipped_reason, 0) + 1
+        else:
+            prepared_count += 1
+
+        warnings_str = ""
+        if r.pdf_verification_warnings:
+            warnings_str = f" ⚠ {'; '.join(r.pdf_verification_warnings)}"
+            all_pdf_warnings.extend(r.pdf_verification_warnings)
+
+        status = r.skipped_reason or "prepared"
+        typer.echo(
+            f"  [{status}] {r.company} — {r.title} → {r.output_dir}{warnings_str}"
+        )
+
+    typer.echo(f"\nPrepared: {prepared_count}")
+    if skipped:
+        for reason, count in sorted(skipped.items()):
+            typer.echo(f"Skipped ({reason}): {count}")
+    if all_pdf_warnings:
+        typer.echo(f"PDF warnings: {len(all_pdf_warnings)}")
     if dry_run:
-        typer.echo("dry run — no changes made")
-        return
-    typer.echo("prepare: not yet implemented")
+        typer.echo("\n(dry run — no changes committed)")
 
 
 @app.command()
