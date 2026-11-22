@@ -1,0 +1,74 @@
+name: Anmol Varshney
+email: varshney.anmol.29@gmail.com
+phone: { country_code: "+91", number: "9027132996" }
+current_location: { city: Bengaluru, country: India, timezone: Asia/Kolkata }
+linkedin: https://linkedin.com/in/anmolvarshney77/
+github: https://github.com/anmolvarshney77
+portfolio: https://anmolvarshney77.github.io/
+
+years_experience: 2
+education:
+  - degree: "Bachelor of Science"
+    field: "Programming and Data Science"
+    institution: "Indian Institute of Technology, Madras"
+    graduation_year: 2025
+  - degree: "Bachelor of Science"
+    field: "Mathematics and Science"
+    institution: "Mahatma Jyotiba Phule Rohilkhand University, Bareilly"
+    graduation_year: 2023
+languages:                         # CEFR levels: A1-C2, native
+  English: C1
+  Hindi: native
+  German: none
+
+target_titles: ["Software Engineer", "Software Developer", "SDE", "SDE II", "Software Engineer II", "Backend Engineer", "Backend Developer", "Full Stack Engineer", "AI Engineer", "Applied AI Engineer", "LLM Engineer", "Software Engineer, AI", "Python Developer"]
+target_titles_local: ["Softwareentwickler", "Softwareentwicklerin", "Backend-Entwickler"]
+seniority_years_range: { min: 1, max: 5 }
+
+core_skills: ["Python", "FastAPI", "PostgreSQL", "TypeScript", "React", "Next.js", "Node.js", "LLM", "RAG", "LangChain"]
+nice_to_have_skills: ["Java", "Spring Boot", "Go", "Docker", "Kubernetes", "AWS", "GCP", "MongoDB", "Redis", "Kafka", "LangGraph"]
+
+target_countries: ["US", "DE", "NL", "IE", "GB", "SE", "DK", "PL", "ES", "PT", "AE", "SG"]
+preferred_cities: ["Berlin", "Amsterdam", "Dublin", "Munich", "London"]
+remote_ok: true
+needs_visa_sponsorship: true
+open_to_relocation: true
+earliest_start: "2027-01-01"
+notice_period_days: 30
+
+expected_salary:                   # annual, local currency
+  US: { currency: USD, min: 120000 }
+  DE: { currency: EUR, min: 60000 }
+  NL: { currency: EUR, min: 60000 }
+  GB: { currency: GBP, min: 55000 }
+  IE: { currency: EUR, min: 50000 }
+  SE: { currency: SEK, min: 554000 }
+  DK: { currency: DKK, min: 374000 }
+  PL: { currency: PLN, min: 215000 }
+  ES: { currency: EUR, min: 50000 }
+  PT: { currency: EUR, min: 50000 }
+  AE: { currency: AED, min: 209000 }
+  SG: { currency: SGD, min: 74000 }
+  default: { currency: EUR, min: 50000 }
+
+exclude_companies: []
+company_cooldown_days: 60
+
+# FIXED answers. The LLM must never generate or change these.
+fixed_answers:
+  authorized_to_work_US: "No"
+  authorized_to_work_EU: "No"
+  authorized_to_work_UK: "No"
+  require_sponsorship_now_or_future: "Yes"
+  willing_to_relocate: "Yes"
+  previously_employed_here: "No"
+  criminal_conviction: "No"
+  age_18_or_over: "Yes"
+  gender: "Male"
+  race_ethnicity: "Asian"
+  veteran_status: "I am not a protected veteran"
+  disability_status: "No, I do not have a disability"
+  pronouns: "he/him"
+  how_did_you_hear: "Company careers page"
+
+resume_master_path: ./master_resume.md
